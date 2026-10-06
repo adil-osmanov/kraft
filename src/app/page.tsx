@@ -624,23 +624,28 @@ function StudyInterface({
       <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gray-50 dark:bg-[#1C1C1E] px-6 text-center">
         <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center max-w-md w-full">
           <div className="text-[72px] leading-none mb-6 select-none">🔒</div>
-          <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-gray-900 dark:text-white mb-4">
-            Дневной лимит исчерпан
+          <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-white mb-6">
+            Снимите все ограничения
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-[15px] mb-10 leading-relaxed px-4">
-            Ты отлично поработал! Сними ограничения, чтобы учить слова в своем темпе и подготовиться к экзамену быстрее.
-          </p>
+          <div className="text-sm text-left text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed space-y-3 px-4 max-w-sm mx-auto w-full">
+            <p>Kraft работает без рекламы. Ваша покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
+            <ul className="space-y-1.5 pl-1">
+              <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Безлимитное обучение</li>
+              <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ ко всем темам</li>
+              <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ навсегда</li>
+            </ul>
+          </div>
           <a
             href={`https://t.me/adilosmanow?text=${encodeURIComponent("Привет! Хочу купить PRO в Kraft. Моя почта в приложении: " + (profile?.email || ""))}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => console.log('Paywall clicked')}
-            className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 dark:bg-white dark:text-black dark:hover:opacity-90 text-white py-4 rounded-2xl font-bold text-[17px] transition-all active:scale-[0.98] mb-3"
+            className="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-semibold text-[15px] transition-all active:scale-[0.98] mb-4 max-w-sm mx-auto"
           >
-            Открыть безлимит навсегда за 890 ₽
+            Поддержать проект за 890 ₽
           </a>
-          <p className="text-[11px] text-gray-400 dark:text-gray-500 font-medium">
-            Разовая оплата. Никаких скрытых подписок
+          <p className="text-xs text-zinc-500 dark:text-zinc-500 font-medium text-center">
+            Разовая оплата. Никаких скрытых подписок.
           </p>
           
           <button
