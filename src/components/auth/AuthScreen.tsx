@@ -45,8 +45,10 @@ export function AuthScreen({ onAuthSuccess }: { onAuthSuccess: () => void }) {
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="bg-white dark:bg-[#1C1C1E] rounded-[32px] p-10 w-full max-w-[400px] shadow-[0_20px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-black/[0.04] dark:border-white/[0.08] text-center"
       >
-        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 rounded-[20px] flex items-center justify-center mx-auto mb-8 shadow-md">
-          <Layers className="text-white w-8 h-8" />
+        <div className="w-16 h-16 bg-gradient-to-br from-[#2A93FF] to-[#0050FF] rounded-[20px] flex items-center justify-center mx-auto mb-8 shadow-[0_4px_12px_rgba(0,80,255,0.3)]">
+          <span className="text-white font-extrabold text-4xl -mt-1 tracking-tighter" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+            K
+          </span>
         </div>
         
         <h2 className="text-[28px] font-semibold text-gray-900 dark:text-white mb-3 tracking-tight leading-tight">
