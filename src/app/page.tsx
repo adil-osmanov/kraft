@@ -1661,33 +1661,41 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
 
       <AnimatePresence>
         {isPaywallOpen && (
-          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/20 dark:bg-black/60 backdrop-blur-md p-4">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1C1C1E] rounded-3xl p-8 max-w-[400px] w-full shadow-2xl border border-white/10 relative text-center"
+              className="bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/10 rounded-[32px] p-8 max-w-sm w-full relative shadow-2xl"
             >
-              <button onClick={() => setIsPaywallOpen(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20">
+              <button 
+                onClick={() => setIsPaywallOpen(false)}
+                className="absolute top-4 right-4 p-2 bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white rounded-full transition-colors"
+              >
                 <X className="w-4 h-4" />
               </button>
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
                 <Star className="w-8 h-8 text-white fill-white" />
               </div>
-              <h2 className="text-xl font-bold text-white mb-2 tracking-tight">Откройте все возможности</h2>
-              <p className="text-[13px] text-gray-400 mb-8 font-medium leading-relaxed px-2">
-                Полный доступ ко всем темам и отсутствие дневных лимитов. Идеально для интенсивной подготовки к экзамену. Учитесь в своем ритме.
-              </p>
+              <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 tracking-tight text-center">Снимите все ограничения</h2>
+              <div className="text-sm text-left text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed space-y-3">
+                <p>Kraft работает без рекламы. Ваша покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
+                <ul className="space-y-1.5 pl-1">
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Безлимитное обучение</li>
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ ко всем темам</li>
+                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ навсегда</li>
+                </ul>
+              </div>
               <a 
                 href={`https://t.me/adilosmanow?text=${encodeURIComponent("Привет! Хочу купить PRO в Kraft. Моя почта в приложении: " + (profile?.email || ""))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => console.log('Paywall clicked')} 
-                className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-2xl py-4 transition-colors active:scale-95 text-[15px]"
+                className="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl py-4 transition-colors active:scale-95 text-[15px]"
               >
-                Открыть безлимит навсегда за 890 ₽
+                Поддержать проект за 890 ₽
               </a>
-              <p className="text-xs text-gray-500 mt-4 font-medium">
+              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-4 font-medium text-center">
                 Разовая оплата. Никаких скрытых подписок.
               </p>
             </motion.div>
