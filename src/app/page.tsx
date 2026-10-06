@@ -546,7 +546,7 @@ function StudyInterface({
   isDrillMode?: boolean,
   profile?: any
 }) {
-  const { answerCard, decks, appLanguage } = useStore();
+  const { answerCard, decks, appLanguage, isPaywallOpen, setIsPaywallOpen } = useStore();
   
   const [activeCards, setActiveCards] = useState<{ deckId: string, card: Flashcard }[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -618,46 +618,14 @@ function StudyInterface({
   const progress = stored ? JSON.parse(stored) : {};
   const rawCount = progress[todayStr];
   const currentCount = typeof rawCount === 'number' ? rawCount : (rawCount?.total || (typeof rawCount === 'string' ? parseInt(rawCount) || 0 : 0));
+  
+  const isLimitReached = profile && profile.tier === 'free' && currentCount >= 70;
 
-  if (profile && profile.tier === 'free' && currentCount >= 70) {
-    return (
-      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gray-50 dark:bg-[#1C1C1E] px-6 text-center">
-        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="flex flex-col items-center max-w-md w-full">
-          <div className="text-[72px] leading-none mb-6 select-none">🔒</div>
-          <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-zinc-900 dark:text-white mb-6">
-            Снимите все ограничения
-          </h1>
-          <div className="text-sm text-left text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed space-y-3 px-4 max-w-sm mx-auto w-full">
-            <p>Kraft работает без рекламы. Ваша покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
-            <ul className="space-y-1.5 pl-1">
-              <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Безлимитное обучение</li>
-              <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ ко всем темам</li>
-              <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ навсегда</li>
-            </ul>
-          </div>
-          <a
-            href={`https://t.me/adilosmanow?text=${encodeURIComponent("Привет! Хочу купить PRO в Kraft. Моя почта в приложении: " + (profile?.email || ""))}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => console.log('Paywall clicked')}
-            className="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white py-4 rounded-xl font-semibold text-[15px] transition-all active:scale-[0.98] mb-4 max-w-sm mx-auto"
-          >
-            Поддержать проект за 890 ₽
-          </a>
-          <p className="text-xs text-zinc-500 dark:text-zinc-500 font-medium text-center">
-            Разовая оплата. Никаких скрытых подписок.
-          </p>
-          
-          <button
-            onClick={onBack}
-            className="mt-8 text-sm font-medium text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
-          >
-            Вернуться назад
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (isLimitReached && !isPaywallOpen) {
+      setIsPaywallOpen(true);
+    }
+  }, [isLimitReached, isPaywallOpen, setIsPaywallOpen]);
 
   const { deckId: currentDeckId, card: currentCardSnapshot } = activeCards[currentIndex];
   // Get live card to instantly reflect masteryLevel updates (blue dots)
@@ -712,6 +680,10 @@ function StudyInterface({
             deckTitle={reviewCards ? currentDeckTitle : undefined}
             forceInputMode={!!reviewCards && !isDrillMode}
             onAnswer={(correct, isHilfe) => {
+              if (isLimitReached) {
+                setIsPaywallOpen(true);
+                return;
+              }
               answerCard(currentDeckId, currentCardSnapshot.id, correct, isHilfe);
               if (correct && !isHilfe) {
                 setMasteredInSession(prev => prev + 1);
@@ -1666,7 +1638,7 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/10 rounded-[32px] p-8 max-w-sm w-full relative shadow-2xl"
+              className="bg-white dark:bg-zinc-900 border border-black/5 dark:border-white/10 rounded-[32px] p-8 max-w-sm w-full relative shadow-2xl text-center"
             >
               <button 
                 onClick={() => setIsPaywallOpen(false)}
@@ -1674,17 +1646,19 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
               >
                 <X className="w-4 h-4" />
               </button>
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
-                <Star className="w-8 h-8 text-white fill-white" />
+              <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-10 h-10 text-zinc-800 dark:text-zinc-300" strokeWidth={1.5} />
               </div>
               <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 tracking-tight text-center">Снимите все ограничения</h2>
-              <div className="text-sm text-left text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed space-y-3">
-                <p>Kraft работает без рекламы. Ваша покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
-                <ul className="space-y-1.5 pl-1">
-                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Безлимитное обучение</li>
-                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ ко всем темам</li>
-                  <li className="flex items-start gap-2"><span className="text-blue-500 mt-0.5">•</span>Доступ навсегда</li>
-                </ul>
+              <div className="text-sm text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
+                <p className="mb-4">Kraft работает без рекламы. Ваша покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
+                <div className="inline-block text-left">
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Безлимитное обучение</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Доступ ко всем темам</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Доступ навсегда</li>
+                  </ul>
+                </div>
               </div>
               <a 
                 href={`https://t.me/adilosmanow?text=${encodeURIComponent("Привет! Хочу купить PRO в Kraft. Моя почта в приложении: " + (profile?.email || ""))}`}
