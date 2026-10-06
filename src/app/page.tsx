@@ -591,6 +591,20 @@ function StudyInterface({
     }
   }, [currentIndex, activeCards]);
 
+  const todayStr = new Date().toLocaleDateString('en-CA');
+  const stored = localStorage.getItem(`daily_activity_${appLanguage}`);
+  const progress = stored ? JSON.parse(stored) : {};
+  const rawCount = progress[todayStr];
+  const currentCount = typeof rawCount === 'number' ? rawCount : (rawCount?.total || (typeof rawCount === 'string' ? parseInt(rawCount) || 0 : 0));
+  
+  const isLimitReached = profile && profile.tier === 'free' && currentCount >= 70;
+
+  useEffect(() => {
+    if (isLimitReached && !isPaywallOpen) {
+      setIsPaywallOpen(true);
+    }
+  }, [isLimitReached, isPaywallOpen, setIsPaywallOpen]);
+
   if (activeCards.length === 0) {
     return (
       <div className="flex-1 flex flex-col justify-center max-w-2xl mx-auto px-6 py-24 text-center">
@@ -612,20 +626,6 @@ function StudyInterface({
       </div>
     );
   }
-
-  const todayStr = new Date().toLocaleDateString('en-CA');
-  const stored = localStorage.getItem(`daily_activity_${appLanguage}`);
-  const progress = stored ? JSON.parse(stored) : {};
-  const rawCount = progress[todayStr];
-  const currentCount = typeof rawCount === 'number' ? rawCount : (rawCount?.total || (typeof rawCount === 'string' ? parseInt(rawCount) || 0 : 0));
-  
-  const isLimitReached = profile && profile.tier === 'free' && currentCount >= 70;
-
-  useEffect(() => {
-    if (isLimitReached && !isPaywallOpen) {
-      setIsPaywallOpen(true);
-    }
-  }, [isLimitReached, isPaywallOpen, setIsPaywallOpen]);
 
   const { deckId: currentDeckId, card: currentCardSnapshot } = activeCards[currentIndex];
   // Get live card to instantly reflect masteryLevel updates (blue dots)
@@ -2427,7 +2427,24 @@ export default function App() {
   const [deleteBookModal, setDeleteBookModal] = useState<{ id: string, title: string } | null>(null);
   const [renameInput, setRenameInput] = useState("");
 
-  const handleDeckClick = useCallback((id: string) => setActiveDeckId(id), []);
+
+  const checkLimitReached = useCallback(() => {
+    const appLang = useStore.getState().appLanguage;
+    const todayStr = new Date().toLocaleDateString('en-CA');
+    const stored = localStorage.getItem(`daily_activity_${appLang}`);
+    const progress = stored ? JSON.parse(stored) : {};
+    const rawCount = progress[todayStr];
+    const currentCount = typeof rawCount === 'number' ? rawCount : (rawCount?.total || (typeof rawCount === 'string' ? parseInt(rawCount) || 0 : 0));
+    return profile && profile.tier === 'free' && currentCount >= 70;
+  }, [profile]);
+
+  const handleDeckClick = useCallback((id: string) => {
+    if (checkLimitReached()) {
+      useStore.getState().setIsPaywallOpen(true);
+      return;
+    }
+    setActiveDeckId(id);
+  }, [checkLimitReached]);
   const handleRenameClick = useCallback((id: string, name: string) => { setRenameInput(name); setRenameModal({ id, name }); }, []);
   const handleDeleteClick = useCallback((id: string, name: string) => setDeleteModal({ id, name }), []);
   const handleEditTheory = useCallback((id: string) => setTheoryEditDeckId(id), []);
@@ -2679,6 +2696,10 @@ try {
       for (let i = drillCards.length - 1; i > 0; i--) {
          const j = Math.floor(Math.random() * (i + 1));
          [drillCards[i], drillCards[j]] = [drillCards[j], drillCards[i]];
+      }
+      if (checkLimitReached()) {
+        useStore.getState().setIsPaywallOpen(true);
+        return;
       }
       setDrillCards(drillCards);
     } else {
@@ -3050,7 +3071,14 @@ try {
           {dueCards.length > 0 && (
             <div className="mb-10">
               <div 
-                onClick={() => { initAudioCtx(); setReviewCards(dueCards); }}
+                onClick={() => { 
+                  if (checkLimitReached()) {
+                    useStore.getState().setIsPaywallOpen(true);
+                    return;
+                  }
+                  initAudioCtx(); 
+                  setReviewCards(dueCards); 
+                }}
                 className="bg-white dark:bg-[#1C1C1E] border border-black/[0.08] dark:border-white/[0.08] rounded-2xl p-4 flex items-center justify-between cursor-pointer hover:border-blue-600/40 dark:hover:border-blue-500/40 transition-all shadow-sm active:scale-[0.98]"
               >
                 <div className="flex items-center gap-3">
