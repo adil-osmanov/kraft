@@ -1375,21 +1375,27 @@ function ActivityWidget({ profile }: { profile?: any }) {
   );
 }
 
-function LanguageSelector() {
-  const { appLanguage, setAppLanguage } = useStore();
+function LanguageSelector({ isAdmin }: { isAdmin?: boolean }) {
+  const { appLanguage, setAppLanguage, books } = useStore();
   const [isOpen, setIsOpen] = useState(false);
-  const currentLang = SUPPORTED_LANGUAGES.find(l => l.code === appLanguage) || SUPPORTED_LANGUAGES[0];
+  
+  const availableLanguages = SUPPORTED_LANGUAGES.filter(lang => {
+    if (isAdmin) return true;
+    return books.some(b => b.language === lang.code);
+  });
+  
+  const currentLang = availableLanguages.find(l => l.code === appLanguage) || availableLanguages[0] || SUPPORTED_LANGUAGES[0];
 
   return (
     <div className="absolute top-5 left-4 md:top-6 md:left-6 z-50">
       <div className="relative">
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => availableLanguages.length > 1 && setIsOpen(!isOpen)}
           className="flex items-center gap-2 bg-white/70 dark:bg-[#1C1C1E]/70 backdrop-blur-xl border border-black/5 dark:border-white/10 px-3 py-2 rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
         >
           <span className="text-base leading-none">{currentLang.icon}</span>
           <span className="text-[13px] font-semibold text-gray-900 dark:text-white leading-none">{currentLang.code}</span>
-          <ChevronRight className={cn("w-3.5 h-3.5 text-gray-400 transition-transform", isOpen ? "rotate-90" : "")} />
+          {availableLanguages.length > 1 && <ChevronRight className={cn("w-3.5 h-3.5 text-gray-400 transition-transform", isOpen ? "rotate-90" : "")} />}
         </button>
 
         <AnimatePresence>
@@ -1401,7 +1407,7 @@ function LanguageSelector() {
               transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="absolute top-full mt-2 left-0 w-[180px] bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/10 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden"
             >
-              {SUPPORTED_LANGUAGES.map(lang => (
+              {availableLanguages.map(lang => (
                 <button
                   key={lang.code}
                   onClick={() => {
@@ -1585,7 +1591,7 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
           </button>
         </div>
       ) : (
-        <LanguageSelector />
+        <LanguageSelector isAdmin={isAdmin} />
       )}
       <div className="absolute top-5 right-4 md:top-6 md:right-6 flex items-center gap-1.5 p-1.5 backdrop-blur-xl bg-white/60 dark:bg-[#1C1C1E]/60 border border-black/5 dark:border-white/10 rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.04)] z-50 transition-colors">
         
