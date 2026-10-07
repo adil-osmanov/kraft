@@ -1655,9 +1655,9 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-10 h-10 text-zinc-800 dark:text-zinc-300" strokeWidth={1.5} />
               </div>
-              <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-4 tracking-tight text-center">Снимите все ограничения</h2>
+              <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-4 tracking-tight text-center">Kraft PRO</h2>
               <div className="text-sm text-zinc-600 dark:text-zinc-400 mb-8 leading-relaxed">
-                <p className="mb-4">Kraft работает без рекламы. Ваша покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
+                <p className="mb-4">Снимите все ограничения. Kraft работает без рекламы, а ваша разовая покупка помогает оплачивать серверы и развивать проект. Взамен вы получаете:</p>
                 <div className="inline-block text-left">
                   <ul className="space-y-2">
                     <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Безлимитное обучение</li>
