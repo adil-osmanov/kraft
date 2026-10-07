@@ -1668,7 +1668,7 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
               </div>
               <div className="flex flex-col gap-3">
                 <a 
-                  href="#"
+                  href="https://app.lava.top/products/311e430b-335d-4292-af8e-7e8ec60606f0"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => console.log('Lava Paywall clicked')} 
