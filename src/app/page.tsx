@@ -1661,21 +1661,32 @@ function HeaderWidgets({ activeBook, onBack, profile, session, onSignOut }: { ac
                 <div className="inline-block text-left">
                   <ul className="space-y-2">
                     <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Безлимитное обучение</li>
-                    <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Доступ ко всем темам</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Доступ ко всем темам (A1-C1)</li>
                     <li className="flex items-start gap-2"><span className="text-blue-500 font-bold">•</span>Доступ навсегда</li>
                   </ul>
                 </div>
               </div>
-              <a 
-                href={`https://t.me/adilosmanow?text=${encodeURIComponent("Привет! Хочу купить PRO в Kraft. Моя почта в приложении: " + (profile?.email || ""))}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => console.log('Paywall clicked')} 
-                className="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl py-4 transition-colors active:scale-95 text-[15px]"
-              >
-                Поддержать проект за 890 ₽
-              </a>
-              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-4 font-medium text-center">
+              <div className="flex flex-col gap-3">
+                <a 
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => console.log('Lava Paywall clicked')} 
+                  className="w-full flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl py-3.5 transition-colors active:scale-95 text-[15px]"
+                >
+                  Оплатить картой / Apple Pay (10 €)
+                </a>
+                <a 
+                  href={`https://t.me/adilosmanow?text=${encodeURIComponent("Привет! Хочу купить Kraft PRO за рубли. Моя почта в приложении: " + (profile?.email || ""))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => console.log('TG Paywall clicked')} 
+                  className="w-full text-center text-[13px] font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors"
+                >
+                  Оплата картой РФ / СБП (890 ₽) ➔
+                </a>
+              </div>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-6 font-medium text-center">
                 Разовая оплата. Никаких скрытых подписок.
               </p>
             </motion.div>
